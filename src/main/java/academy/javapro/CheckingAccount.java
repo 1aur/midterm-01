@@ -5,7 +5,7 @@ package academy.javapro;
  * Features overdraft protection and transaction fees.
  */
 public class CheckingAccount extends Account {
-    private final double overdraftLimit;
+    private double overdraftLimit;
     private static final double TRANSACTION_FEE = 1.5; // Fee per withdrawal
 
     /**
@@ -27,7 +27,8 @@ public class CheckingAccount extends Account {
      * @return The overdraft limit
      */
     public double getOverdraftLimit() {
-        throw new UnsupportedOperationException("Method not implemented");
+        return overdraftLimit;
+       // throw new UnsupportedOperationException("Method not implemented");
     }
 
     /**
@@ -36,7 +37,9 @@ public class CheckingAccount extends Account {
      * @param overdraftLimit The new overdraft limit
      */
     public void setOverdraftLimit(double overdraftLimit) {
-        throw new UnsupportedOperationException("Method not implemented");
+        this.overdraftLimit = overdraftLimit;
+        System.out.println("Overdraft limit updated to $" + String.format("%.1f", overdraftLimit)); 
+        // throw new UnsupportedOperationException("Method not implemented");
     }
 
     /**
@@ -45,7 +48,22 @@ public class CheckingAccount extends Account {
      */
     @Override
     public void withdraw(double amount) {
-        throw new UnsupportedOperationException("Method not implemented");
+        double newBalance = getBalance() - amount - TRANSACTION_FEE;
+        // throw new UnsupportedOperationException("Method not implemented");
+        if (newBalance >= -overdraftLimit) {
+            setBalance(newBalance);
+            logTransaction("WITHDRAWAL", amount);
+            logTransaction("FEE", TRANSACTION_FEE);
+
+        System.out.println("Withdrew $" + String.format("%.2f", amount) + " from checking account");
+        System.out.println("Transaction fee: $" + String.format("%.2f", TRANSACTION_FEE));
+
+        if (newBalance < 0) {
+            System.out.println("Account is in overdraft. Current balance: $" + String.format("%.2f", newBalance));
+        }
+        } else {
+            System.out.println("Withdrawal exceeds overdraft limit.");
+        }
     }
 
     /**
